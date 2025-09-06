@@ -13,10 +13,15 @@ def generate_sample(start: int, end: int, step: str, filename: str = "sample", p
         path (str): Local onde o arquivo sample ficará criado.
     """
 
-    with open(f"{path}/{filename}-{start}-{end}-{step}.txt", "w", encoding="utf-8") as file:
-        for i in range(start, end + 1, step):
-            file.write(f"{i}\n")
-
+    print(f"Criando o arquivo de sample {path}/{filename}-{start}-{end}-{step}.txt")
+    try:
+        with open(f"{path}/{filename}-{start}-{end}-{step}.txt", "w", encoding="utf-8") as file:
+            for i in range(start, end + 1, step):
+                file.write(f"{i}\n")
+        print("Arquivo criado com sucesso!")
+    except Exception as e:
+        print(f"PROCESSO DE CRIAÇÃO DE SAMPLE OCORREU UM IMPREVISTO.")
+        print(f"Erro: {e}")
 
 if __name__ == "__main__":
     start = int(input())
