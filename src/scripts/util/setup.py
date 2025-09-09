@@ -1,6 +1,6 @@
 import os
 
-from generate_sample import generate_sample
+from generate_sample import generate_sample, generate_random_sequence_sample, generate_sequence_sample
 
 def setup(path: str = "src/scripts/samples"):
     """
@@ -44,6 +44,20 @@ def setup(path: str = "src/scripts/samples"):
     for each_setup in setups:
         print(f"Fazendo o setup referente ao: {each_setup}")
         generate_sample(
+            start=each_setup["start"],
+            end=each_setup["end"],
+            step=each_setup["step"],
+            filename=each_setup["name"],
+            path=path
+        )
+        generate_random_sequence_sample(
+            start=each_setup["start"],
+            end=each_setup["end"],
+            step=each_setup["step"],
+            filename=each_setup["name"],
+            path=path
+        )
+        generate_sequence_sample(
             start=each_setup["start"],
             end=each_setup["end"],
             step=each_setup["step"],
