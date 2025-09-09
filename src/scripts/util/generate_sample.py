@@ -10,7 +10,7 @@ def generate_sample(start: int, end: int, step: str, filename: str = "sample", p
         end (int): Número máximo
         step (int): Intervalo que define granularidade
         filename (str): Nome do arquivo sample, sem extensão .txt, segue
-        o formato "filename-start-step.txt"
+        o formato "<filename>-<start>-<step>.txt"
         path (str): Local onde o arquivo sample ficará criado.
     """
 
@@ -35,7 +35,7 @@ def generate_random_sequence_sample(start: int, end: int, step: int, filename: s
         end (int): Número máximo
         step (int): Intervalo que define granularidade
         filename (str): Nome do arquivo sample, sem extensão .txt, segue
-        o formato "filename-start-step.txt"
+        o formato "random-<filename>-<start>-<step>.txt"
         path (str): Local onde o arquivo sample ficará criado.
     """
 
@@ -58,15 +58,15 @@ def generate_random_sequence_sample(start: int, end: int, step: int, filename: s
 def generate_sequence_sample(start: int, end: int, step: int, filename: str = "sample", path: str = "."):
     """
     Gera uma sample de dados que será utilizada para mensurar as estruturas 
-    que vamos compararar. Números aleatórios gerados em sequência baseado no
-    start e end definido no arquivo .env.
+    que vamos compararar. Números gerados em sequência baseado no start
+    e end definido no arquivo .env.
 
     Args:
         start (int): Número mínimo
         end (int): Número máximo
         step (int): Intervalo que define granularidade
         filename (str): Nome do arquivo sample, sem extensão .txt, segue
-        o formato "filename-start-step.txt"
+        o formato "sequential-<filename>-<start>-<step>.txt"
         path (str): Local onde o arquivo sample ficará criado.
     """
 
