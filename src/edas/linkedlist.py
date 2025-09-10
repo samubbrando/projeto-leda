@@ -85,6 +85,21 @@ class LinkedList:
         
         return aux.value
     
+    def getByValue(self, value):
+        if self.isEmpty():
+            return -1
+        
+        aux = self.head
+        index = 0
+        
+        while aux is not None:
+            if aux.value == value:
+                return index
+            aux = aux.next
+            index += 1
+        
+        return -1
+    
     def removeFirst(self):
         if(self.isEmpty()):
             raise ReferenceError("this structure is empty!")
@@ -137,6 +152,22 @@ class LinkedList:
         self.size -= 1
 
         return aux.value
+    
+    def removeByValue(self, value):
+        if self.isEmpty():
+            return False
+        
+        aux = self.head
+        index = 0
+        
+        while aux is not None:
+            if aux.value == value:
+                self.remove(index)
+                return True
+            aux = aux.next
+            index += 1
+        
+        return False
     
     def toString(self):
         if(self.isEmpty()):
