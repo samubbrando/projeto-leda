@@ -1,10 +1,11 @@
 from time import time
-import sys
-import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from src.edas.linkedlist import LinkedList
 
+import os
+
+measurements_dir = os.path.join(os.path.dirname(__file__), "../../measurements")
+os.makedirs(measurements_dir, exist_ok=True)
 
 setup_a = {
         "name": "setup-a",
@@ -34,10 +35,10 @@ def test_insert(data: list, test_linkedlist: LinkedList) -> int:
 
     start = time()
     
-    print("Teste de adicao rolando")
+    print("Teste de adicao no fim rolando")
 
     for value in data:
-        test_linkedlist.add(int(value), int(value)) #temos um problema aqui
+        test_linkedlist.addLast(int(value)) #temos um problema aqui
 
     end = time()
 
