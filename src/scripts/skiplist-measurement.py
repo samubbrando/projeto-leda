@@ -27,51 +27,43 @@ setup_c = {
 
 setups = [setup_a, setup_b, setup_c]
 
-def test_insert(data: list, test_skiplist: SkipList) -> float:
+def test_insert(data: list, test_skiplist: SkipList) -> int:
     test_skiplist = SkipList()
 
-    start = time()
+    start = time() * 1000
     
     print("Teste de adicao rolando")
 
     for value in data:
         test_skiplist.insert(int(value), int(value))
 
-    end = time()
+    end = time() * 1000
     
-    print(start, end)
-
-    return end - start
+    return int(end - start)
 
 
-def test_deletion(data: list, test_skiplist: SkipList) -> float:
-    start = time()
+def test_deletion(data: list, test_skiplist: SkipList) -> int:
+    start = time() * 1000
 
     print("Teste de delecao rolando")
     for value in data:
         test_skiplist.delete(int(value))
 
-    end = time()
-
-    print(start, end)
+    end = time() * 1000
 
     return int(end - start)
 
 
-def test_search(data: list, test_skiplist: SkipList) -> float:
-    start = time()
+def test_search(data: list, test_skiplist: SkipList) -> int:
+    start = time() * 1000
 
     print("Teste de procura rolando")
     for value in data:
         test_skiplist.search(int(value))
 
-    end = time()
-
-    print(start, end)
+    end = time() * 1000
 
     return int(end - start)
-
-
 
 # Calculando adição
 for setup in setups:
@@ -86,7 +78,7 @@ for setup in setups:
 
     # SEQUENTIAL
     with open(f"src/samples/sequential-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
-        i = 1
+        i = 0
         for data in f.readlines():
             print("Iniciando os testes", i)
             i += 1
@@ -98,8 +90,23 @@ for setup in setups:
             result_sequential_deletion.append([len(data), test_deletion(data.split(), test_skiplist)])
         print()
 
+
+    with open(f"measurements/skiplist-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_insertion:
+            f.write(str(i))
+            f.write("\n")
+    with open(f"measurements/skiplist-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_search:
+            f.write(str(i))
+            f.write("\n")
+    with open(f"measurements/skiplist-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_deletion:
+            f.write(str(i))
+            f.write("\n")
+
+    # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
-        i = 1
+        i = 0
         for data in f.readlines():
             print("Iniciando os testes", i)
             i += 1
@@ -111,15 +118,17 @@ for setup in setups:
             result_random_deletion.append([len(data), test_deletion(data.split(), test_skiplist)])
         print()
 
-    with open("measurements/skiplist-insertion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_insertion:
+    with open(f"measurements/skiplist-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
+        for i in result_random_insertion:
             f.write(str(i))
             f.write("\n")
-    with open("measurements/skiplist-search-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_search:
+    with open(f"measurements/skiplist-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
+        for i in result_random_search:
             f.write(str(i))
             f.write("\n")
-    with open("measurements/skiplist-deletion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_deletion:
+    with open(f"measurements/skiplist-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
+        for i in result_random_deletion:
             f.write(str(i))
             f.write("\n")
+
+
