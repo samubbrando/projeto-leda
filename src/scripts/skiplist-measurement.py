@@ -27,7 +27,7 @@ setup_c = {
 
 setups = [setup_a, setup_b, setup_c]
 
-def test_insert(data: list, test_skiplist: SkipList) -> int:
+def test_insert(data: list, test_skiplist: SkipList) -> float:
     test_skiplist = SkipList()
 
     start = time()
@@ -38,11 +38,13 @@ def test_insert(data: list, test_skiplist: SkipList) -> int:
         test_skiplist.insert(int(value), int(value))
 
     end = time()
+    
+    print(start, end)
 
-    return int(end - start)
+    return end - start
 
 
-def test_deletion(data: list, test_skiplist: SkipList) -> int:
+def test_deletion(data: list, test_skiplist: SkipList) -> float:
     start = time()
 
     print("Teste de delecao rolando")
@@ -51,10 +53,12 @@ def test_deletion(data: list, test_skiplist: SkipList) -> int:
 
     end = time()
 
+    print(start, end)
+
     return int(end - start)
 
 
-def test_search(data: list, test_skiplist: SkipList) -> int:
+def test_search(data: list, test_skiplist: SkipList) -> float:
     start = time()
 
     print("Teste de procura rolando")
@@ -62,6 +66,8 @@ def test_search(data: list, test_skiplist: SkipList) -> int:
         test_skiplist.search(int(value))
 
     end = time()
+
+    print(start, end)
 
     return int(end - start)
 
