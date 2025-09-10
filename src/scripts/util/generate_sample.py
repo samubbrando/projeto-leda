@@ -4,7 +4,7 @@ def generate_sample(start: int, end: int, step: str, filename: str = "sample", p
     """
     Gera uma sample de dados que será utilizada para mensurar as estruturas 
     que vamos compararar.
-
+    
     Args:
         start (int): Número mínimo
         end (int): Número máximo
