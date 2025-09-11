@@ -7,6 +7,8 @@ import os
 measurements_dir = os.path.join(os.path.dirname(__file__), "../../measurements")
 os.makedirs(measurements_dir, exist_ok=True)
 
+#TODO: corrigir esse arquivo, pois está testando de maneira incorreta
+
 setup_a = {
         "name": "setup-a",
         "start": int(os.getenv("START_A")),
@@ -38,9 +40,11 @@ def test_insert(data: list, test_linkedlist: LinkedList) -> int:
     print("Teste de adicao no fim rolando")
 
     for value in data:
-        test_linkedlist.addLast(int(value)) #temos um problema aqui
+        test_linkedlist.addLast(int(value))
 
     end = time()
+
+    print(start, end)
 
     return int(end - start)
 
@@ -54,6 +58,8 @@ def test_deletion(data: list, test_linkedlist: LinkedList) -> int:
 
     end = time()
 
+    print(start, end)
+
     return int(end - start)
 
 
@@ -65,6 +71,8 @@ def test_search(data: list, test_linkedlist: LinkedList) -> int:
         test_linkedlist.getByValue(int(value))
 
     end = time()
+
+    print(start, end)
 
     return int(end - start)
 
@@ -83,7 +91,7 @@ for setup in setups:
 
     # SEQUENTIAL
     with open(f"src/samples/sequential-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
-        i = 1
+        i = 0
         for data in f.readlines():
             print("Iniciando os testes", i)
             i += 1
@@ -95,28 +103,43 @@ for setup in setups:
             result_sequential_deletion.append([len(data), test_deletion(data.split(), test_linkedlist)])
         print()
 
+
+    with open(f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_insertion:
+            f.write(str(i))
+            f.write("\n")
+    with open(f"measurements/linkedlist-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_search:
+            f.write(str(i))
+            f.write("\n")
+    with open(f"measurements/linkedlist-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_deletion:
+            f.write(str(i))
+            f.write("\n")
+
+    # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
-        i = 1
+        i = 0
         for data in f.readlines():
             print("Iniciando os testes", i)
             i += 1
 
-            test_linkedlist = LinkedList()
+            test_skiplist = LinkedList()
 
             result_random_insertion.append([len(data), test_insert(data.split(), test_linkedlist)])
             result_random_search.append([len(data), test_search(data.split(), test_linkedlist)])
             result_random_deletion.append([len(data), test_deletion(data.split(), test_linkedlist)])
         print()
 
-    with open("measurements/linkedlist-insertion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_insertion:
+    with open(f"measurements/linkedlist-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
+        for i in result_random_insertion:
             f.write(str(i))
             f.write("\n")
-    with open("measurements/linkedlist-search-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_search:
+    with open(f"measurements/linkedlist-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
+        for i in result_random_search:
             f.write(str(i))
             f.write("\n")
-    with open("measurements/linkedlist-deletion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_deletion:
+    with open(f"measurements/linkedlist-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
+        for i in result_random_deletion:
             f.write(str(i))
             f.write("\n")
