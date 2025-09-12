@@ -1,7 +1,9 @@
-python3 -m venv config/.venv
 
-pip install -r config/requirements.txt
+
+python3 -m venv config/.venv
 
 source config/.venv/bin/activate
 
-source config/.env
+pip install --upgrade pip
+pip install -r config/requirements
+

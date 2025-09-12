@@ -46,7 +46,7 @@ def generate_random_sequence_sample(start: int, end: int, step: int, filename: s
             for i in range(start + step, end, step):
                 file.write(f"{randint(start, end)}")
                 
-                for _ in range(start + step, i - 1, step):
+                for _ in range(start + step, i - 1):
                     file.write(f" {randint(start, end)}")
                 file.write("\n")
 
@@ -77,7 +77,7 @@ def generate_sequence_sample(start: int, end: int, step: int, filename: str = "s
             for i in range(start + step, end, step):
                 file.write(f"{start}")
                 
-                for d in range(start + step, i - 1, step):
+                for d in range(start + step, i - 1):
                     file.write(f" {d}")
                 file.write("\n")
 
