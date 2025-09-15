@@ -23,7 +23,6 @@ class AVLTree:
         self.root = None
         self.size = 0
 
-    # ------------------ Inserção ------------------
     def add(self, value):
         self.root = self._add(self.root, value)
         self.root.parent = None
@@ -43,7 +42,6 @@ class AVLTree:
         node.update_height()
         return self._balance(node)
 
-    # ------------------ Remoção ------------------
     def remove(self, value):
         if self.root:
             self.root = self._remove(self.root, value)
@@ -79,8 +77,7 @@ class AVLTree:
 
         node.update_height()
         return self._balance(node)
-
-    # ------------------ Rotação e balanceamento ------------------
+    
     def _balance(self, node):
         bf = node.balance_factor()
         # Rotação direita
@@ -131,7 +128,6 @@ class AVLTree:
         y.update_height()
         return y
 
-    # ------------------ Min / Max ------------------
     def _min(self, node):
         while node.left:
             node = node.left
@@ -148,7 +144,7 @@ class AVLTree:
     def max(self):
         return self._max(self.root) if self.root else None
 
-    # ------------------ Search ------------------
+
     def search(self, value):
         return self._search(self.root, value)
 

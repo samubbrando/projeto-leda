@@ -138,5 +138,6 @@ for setup in setups:
             f.write(str(i))
             f.write("\n")
 
+
     print("Terminou tudo")
 
