@@ -2,7 +2,7 @@ import os
 
 from generate_sample import generate_sample, generate_random_sequence_sample, generate_sequence_sample
 
-def setup(path: str = "src/scripts/samples"):
+def setup(path: str = os.getenv("SAMPLE_RELATIVE_PATH")):
     """
     Gera os arquivos de sample usando os atributos definidos em .env
     
