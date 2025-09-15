@@ -55,7 +55,7 @@ def test_deletion(data: list, test_rbtree: RedBlackTree) -> float:
 
     print(start, end)
 
-    return int(end - start)
+    return end - start
 
 
 def test_search(data: list, test_rbtree: RedBlackTree) -> float:
@@ -69,7 +69,7 @@ def test_search(data: list, test_rbtree: RedBlackTree) -> float:
 
     print(start, end)
 
-    return int(end - start)
+    return end - start
 
 
 
@@ -98,6 +98,19 @@ for setup in setups:
             result_sequential_deletion.append([len(data), test_deletion(data.split(), test_rbtree)])
         print()
 
+    with open("measurements/RedBlackTree-insertion-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_insertion:
+            f.write(str(i))
+            f.write("\n")
+    with open("measurements/RedBlackTree-search-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_search:
+            f.write(str(i))
+            f.write("\n")
+    with open("measurements/RedBlackTree-deletion-sequential.txt", "w", encoding="utf-8") as f:
+        for i in result_sequential_deletion:
+            f.write(str(i))
+            f.write("\n")
+
     # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
         i = 1
@@ -111,19 +124,6 @@ for setup in setups:
             result_random_search.append([len(data), test_search(data.split(), test_rbtree)])
             result_random_deletion.append([len(data), test_deletion(data.split(), test_rbtree)])
         print()
-
-    with open("measurements/RedBlackTree-insertion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_insertion:
-            f.write(str(i))
-            f.write("\n")
-    with open("measurements/RedBlackTree-search-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_search:
-            f.write(str(i))
-            f.write("\n")
-    with open("measurements/RedBlackTree-deletion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_deletion:
-            f.write(str(i))
-            f.write("\n")
 
     with open("measurements/RedBlackTree-insertion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_insertion:
