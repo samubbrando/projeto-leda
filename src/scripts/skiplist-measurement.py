@@ -1,14 +1,12 @@
 from time import time
-
 from src.edas.skiplist import SkipList
-
 import os
 
 setup_a = {
-        "name": "setup-a",
-        "start": int(os.getenv("START_A")),
-        "end": int(os.getenv("END_A")),
-        "step": int(os.getenv("STEP_A"))
+    "name": "setup-a",
+    "start": int(os.getenv("START_A")),
+    "end": int(os.getenv("END_A")),
+    "step": int(os.getenv("STEP_A"))
 }
 
 setup_b = {
@@ -27,43 +25,53 @@ setup_c = {
 
 setups = [setup_a, setup_b, setup_c]
 
-def test_insert(data: list, test_skiplist: SkipList) -> int:
-    test_skiplist = SkipList()
 
-    start = time() * 1000
-    
-    print("Teste de adicao rolando")
+def test_insert(data: list, test_skiplist: SkipList) -> float:
+    times = []
+    for _ in range(25):
+        test_skiplist = SkipList()
 
-    for value in data:
-        test_skiplist.insert(int(value), int(value))
+        start = time() * 1000
+        print("Teste de adicao rolando")
+        for value in data:
+            test_skiplist.insert(int(value), int(value))
+        end = time() * 1000
+        print(start, end)
 
-    end = time() * 1000
-    
-    return int(end - start)
+        times.append(end - start)
 
-
-def test_deletion(data: list, test_skiplist: SkipList) -> int:
-    start = time() * 1000
-
-    print("Teste de delecao rolando")
-    for value in data:
-        test_skiplist.delete(int(value))
-
-    end = time() * 1000
-
-    return int(end - start)
+    return sum(times) / len(times)
 
 
-def test_search(data: list, test_skiplist: SkipList) -> int:
-    start = time() * 1000
+def test_deletion(data: list, test_skiplist: SkipList) -> float:
+    times = []
+    for _ in range(25):
+        start = time() * 1000
+        print("Teste de delecao rolando")
+        for value in data:
+            test_skiplist.delete(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    print("Teste de procura rolando")
-    for value in data:
-        test_skiplist.search(int(value))
+        times.append(end - start)
 
-    end = time() * 1000
+    return sum(times) / len(times)
 
-    return int(end - start)
+
+def test_search(data: list, test_skiplist: SkipList) -> float:
+    times = []
+    for _ in range(25):
+        start = time() * 1000
+        print("Teste de procura rolando")
+        for value in data:
+            test_skiplist.search(int(value))
+        end = time() * 1000
+        print(start, end)
+
+        times.append(end - start)
+
+    return sum(times) / len(times)
+
 
 # Calculando adição
 for setup in setups:
@@ -85,24 +93,21 @@ for setup in setups:
 
             test_skiplist = SkipList()
 
-            result_sequential_insertion.append([len(data), test_insert(data.split(), test_skiplist)])
-            result_sequential_search.append([len(data), test_search(data.split(), test_skiplist)])
-            result_sequential_deletion.append([len(data), test_deletion(data.split(), test_skiplist)])
+            result_sequential_insertion.append([len(data.split()), test_insert(data.split(), test_skiplist)])
+            result_sequential_search.append([len(data.split()), test_search(data.split(), test_skiplist)])
+            result_sequential_deletion.append([len(data.split()), test_deletion(data.split(), test_skiplist)])
         print()
 
 
     with open(f"measurements/skiplist-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_insertion:
-            f.write(str(i))
-            f.write("\n")
+            f.write(str(i) + "\n")
     with open(f"measurements/skiplist-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_search:
-            f.write(str(i))
-            f.write("\n")
+            f.write(str(i) + "\n")
     with open(f"measurements/skiplist-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_deletion:
-            f.write(str(i))
-            f.write("\n")
+            f.write(str(i) + "\n")
 
     # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
@@ -113,22 +118,17 @@ for setup in setups:
 
             test_skiplist = SkipList()
 
-            result_random_insertion.append([len(data), test_insert(data.split(), test_skiplist)])
-            result_random_search.append([len(data), test_search(data.split(), test_skiplist)])
-            result_random_deletion.append([len(data), test_deletion(data.split(), test_skiplist)])
+            result_random_insertion.append([len(data.split()), test_insert(data.split(), test_skiplist)])
+            result_random_search.append([len(data.split()), test_search(data.split(), test_skiplist)])
+            result_random_deletion.append([len(data.split()), test_deletion(data.split(), test_skiplist)])
         print()
 
     with open(f"measurements/skiplist-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_insertion:
-            f.write(str(i))
-            f.write("\n")
+            f.write(str(i) + "\n")
     with open(f"measurements/skiplist-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_search:
-            f.write(str(i))
-            f.write("\n")
+            f.write(str(i) + "\n")
     with open(f"measurements/skiplist-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_deletion:
-            f.write(str(i))
-            f.write("\n")
-
-
+            f.write(str(i) + "\n")

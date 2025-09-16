@@ -1,7 +1,5 @@
 from time import time
-
 from src.edas.linkedlist import LinkedList
-
 import os
 
 measurements_dir = os.path.join(os.path.dirname(__file__), "../../measurements")
@@ -31,47 +29,50 @@ setup_c = {
 setups = [setup_a, setup_b, setup_c]
 
 def test_insert(data: list, test_linkedlist: LinkedList) -> float:
-    start = time() * 1000
-    
-    print("Teste de adicao rolando")
+    times = []
+    for _ in range(25):
+        test_linkedlist = LinkedList()
 
-    for value in data:
-        test_linkedlist.addLast(int(value))
+        start = time() * 1000
+        print("Teste de adicao rolando")
+        for value in data:
+            test_linkedlist.addLast(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    end = time() * 1000
-    
-    print(start, end)
+        times.append(end - start)
 
-    return end - start
+    return sum(times) / len(times)
 
 
 def test_deletion(data: list, test_linkedlist: LinkedList) -> float:
-    start = time() * 1000
+    times = []
+    for _ in range(25):
+        start = time() * 1000
+        print("Teste de delecao rolando")
+        for value in data:
+            test_linkedlist.removeByValue(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    print("Teste de delecao rolando")
-    for value in data:
-        test_linkedlist.removeByValue(int(value))
+        times.append(end - start)
 
-    end = time() * 1000
-
-    print(start, end)
-
-    return end - start
+    return sum(times) / len(times)
 
 
 def test_search(data: list, test_linkedlist: LinkedList) -> float:
-    start = time() * 1000
+    times = []
+    for _ in range(25):
+        start = time() * 1000
+        print("Teste de procura rolando")
+        for value in data:
+            test_linkedlist.getByValue(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    print("Teste de procura rolando")
-    for value in data:
-        test_linkedlist.getByValue(int(value))
+        times.append(end - start)
 
-    end = time() * 1000
-
-    print(start, end)
-
-    return end - start
-
+    return sum(times) / len(times)
 
 
 # Calculando adição
@@ -94,9 +95,9 @@ for setup in setups:
 
             test_linkedlist = LinkedList()
 
-            result_sequential_insertion.append([len(data), test_insert(data.split(), test_linkedlist)])
-            result_sequential_search.append([len(data), test_search(data.split(), test_linkedlist)])
-            result_sequential_deletion.append([len(data), test_deletion(data.split(), test_linkedlist)])
+            result_sequential_insertion.append([len(data.split()), test_insert(data.split(), test_linkedlist)])
+            result_sequential_search.append([len(data.split()), test_search(data.split(), test_linkedlist)])
+            result_sequential_deletion.append([len(data.split()), test_deletion(data.split(), test_linkedlist)])
         print()
 
     with open("measurements/linkedlist-insertion-sequential.txt", "w", encoding="utf-8") as f:
@@ -111,6 +112,7 @@ for setup in setups:
         for i in result_sequential_deletion:
             f.write(str(i))
             f.write("\n")
+
     # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
         i = 1
@@ -120,9 +122,9 @@ for setup in setups:
 
             test_linkedlist = LinkedList()
 
-            result_random_insertion.append([len(data), test_insert(data.split(), test_linkedlist)])
-            result_random_search.append([len(data), test_search(data.split(), test_linkedlist)])
-            result_random_deletion.append([len(data), test_deletion(data.split(), test_linkedlist)])
+            result_random_insertion.append([len(data.split()), test_insert(data.split(), test_linkedlist)])
+            result_random_search.append([len(data.split()), test_search(data.split(), test_linkedlist)])
+            result_random_deletion.append([len(data.split()), test_deletion(data.split(), test_linkedlist)])
         print()
 
     with open("measurements/linkedlist-insertion-random.txt", "w", encoding="utf-8") as f:

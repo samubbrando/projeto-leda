@@ -29,48 +29,51 @@ setup_c = {
 setups = [setup_a, setup_b, setup_c]
 
 def test_insert(data: list, test_avltree: AVLTree) -> float:
-    test_avltree = AVLTree()
+    times = []
+    for _ in range(25):
+        test_avltree = AVLTree()
 
-    start = time() * 1000
-    
-    print("Teste de adicao rolando")
+        start = time() * 1000
+        print("Teste de adicao rolando")
+        for value in data:
+            test_avltree.add(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    for value in data:
-        test_avltree.add(int(value))
+        times.append(end - start)
 
-    end = time() * 1000
-    
-    print(start, end)
-
-    return end - start
+    return sum(times) / len(times)
 
 
 def test_deletion(data: list, test_avltree: AVLTree) -> float:
-    start = time() * 1000
+    times = []
+    for _ in range(25):
+        start = time() * 1000
+        print("Teste de delecao rolando")
+        for value in data:
+            test_avltree.remove(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    print("Teste de delecao rolando")
-    for value in data:
-        test_avltree.remove(int(value))
+        times.append(end - start)
 
-    end = time() * 1000
-
-    print(start, end)
-
-    return end - start
+    return sum(times) / len(times)
 
 
 def test_search(data: list, test_avltree: AVLTree) -> float:
-    start = time() * 1000
+    times = []
+    for _ in range(25):
+        start = time() * 1000
+        print("Teste de procura rolando")
+        for value in data:
+            test_avltree.search(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    print("Teste de procura rolando")
-    for value in data:
-        test_avltree.search(int(value))
+        times.append(end - start)
 
-    end = time() * 1000
+    return sum(times) / len(times)
 
-    print(start, end)
-
-    return end - start
 
 
 # Calculando adição
@@ -93,9 +96,9 @@ for setup in setups:
 
             test_avltree = AVLTree()
 
-            result_sequential_insertion.append([len(data), test_insert(data.split(), test_avltree)])
-            result_sequential_search.append([len(data), test_search(data.split(), test_avltree)])
-            result_sequential_deletion.append([len(data), test_deletion(data.split(), test_avltree)])
+            result_sequential_insertion.append([len(data.split()), test_insert(data.split(), test_avltree)])
+            result_sequential_search.append([len(data.split()), test_search(data.split(), test_avltree)])
+            result_sequential_deletion.append([len(data.split()), test_deletion(data.split(), test_avltree)])
         print()
         
     with open("measurements/AVLTree-insertion-sequential.txt", "w", encoding="utf-8") as f:
@@ -120,9 +123,9 @@ for setup in setups:
 
             test_avltree = AVLTree()
 
-            result_random_insertion.append([len(data), test_insert(data.split(), test_avltree)])
-            result_random_search.append([len(data), test_search(data.split(), test_avltree)])
-            result_random_deletion.append([len(data), test_deletion(data.split(), test_avltree)])
+            result_random_insertion.append([len(data.split()), test_insert(data.split(), test_avltree)])
+            result_random_search.append([len(data.split()), test_search(data.split(), test_avltree)])
+            result_random_deletion.append([len(data.split()), test_deletion(data.split(), test_avltree)])
             
         print()
 
@@ -139,6 +142,4 @@ for setup in setups:
             f.write(str(i))
             f.write("\n")
 
-
     print("Terminou tudo")
-
