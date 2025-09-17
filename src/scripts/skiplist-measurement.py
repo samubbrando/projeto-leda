@@ -92,22 +92,26 @@ for setup in setups:
             i += 1
 
             test_skiplist = SkipList()
+            split_data = data.split()
 
-            result_sequential_insertion.append([len(data.split()), test_insert(data.split(), test_skiplist)])
-            result_sequential_search.append([len(data.split()), test_search(data.split(), test_skiplist)])
-            result_sequential_deletion.append([len(data.split()), test_deletion(data.split(), test_skiplist)])
+            result_sequential_insertion.append([len(split_data), test_insert(split_data, test_skiplist)])
+            result_sequential_search.append([len(split_data), test_search(split_data, test_skiplist)])
+            result_sequential_deletion.append([len(split_data), test_deletion(split_data, test_skiplist)])
         print()
 
 
     with open(f"measurements/skiplist-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_insertion:
-            f.write(str(i) + "\n")
+            f.write(f"{i[0]} {i[1]}")
+            f.write("\n")
     with open(f"measurements/skiplist-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_search:
-            f.write(str(i) + "\n")
+            f.write(f"{i[0]} {i[1]}")
+            f.write("\n")
     with open(f"measurements/skiplist-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_deletion:
-            f.write(str(i) + "\n")
+            f.write(f"{i[0]} {i[1]}")
+            f.write("\n")
 
     # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
@@ -117,18 +121,24 @@ for setup in setups:
             i += 1
 
             test_skiplist = SkipList()
+            split_data = data.split()
 
-            result_random_insertion.append([len(data.split()), test_insert(data.split(), test_skiplist)])
-            result_random_search.append([len(data.split()), test_search(data.split(), test_skiplist)])
-            result_random_deletion.append([len(data.split()), test_deletion(data.split(), test_skiplist)])
+            result_random_insertion.append([len(split_data), test_insert(split_data, test_skiplist)])
+            result_random_search.append([len(split_data), test_search(split_data, test_skiplist)])
+            result_random_deletion.append([len(split_data), test_deletion(split_data, test_skiplist)])
         print()
 
     with open(f"measurements/skiplist-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_insertion:
-            f.write(str(i) + "\n")
+            f.write(f"{i[0]} {i[1]}")
+            f.write("\n")
     with open(f"measurements/skiplist-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_search:
-            f.write(str(i) + "\n")
+            f.write(f"{i[0]} {i[1]}")
+            f.write("\n")
     with open(f"measurements/skiplist-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_deletion:
-            f.write(str(i) + "\n")
+            f.write(f"{i[0]} {i[1]}")
+            f.write("\n")
+
+

@@ -94,23 +94,24 @@ for setup in setups:
             i += 1
 
             test_rbtree = RedBlackTree()
+            split_data = data.split()
 
-            result_sequential_insertion.append([len(data.split()), test_insert(data.split(), test_rbtree)])
-            result_sequential_search.append([len(data.split()), test_search(data.split(), test_rbtree)])
-            result_sequential_deletion.append([len(data.split()), test_deletion(data.split(), test_rbtree)])
+            result_sequential_insertion.append([len(split_data), test_insert(split_data, test_rbtree)])
+            result_sequential_search.append([len(split_data), test_search(split_data, test_rbtree)])
+            result_sequential_deletion.append([len(split_data), test_deletion(split_data, test_rbtree)])
         print()
 
-    with open("measurements/RedBlackTree-insertion-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/RedBlackTree-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_insertion:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/RedBlackTree-search-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/RedBlackTree-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_search:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/RedBlackTree-deletion-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/RedBlackTree-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_deletion:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
 
     # RANDOM
@@ -121,23 +122,24 @@ for setup in setups:
             i += 1
 
             test_rbtree = RedBlackTree()
+            split_data = data.split()
 
-            result_random_insertion.append([len(data.split()), test_insert(data.split(), test_rbtree)])
-            result_random_search.append([len(data.split()), test_search(data.split(), test_rbtree)])
-            result_random_deletion.append([len(data.split()), test_deletion(data.split(), test_rbtree)])
+            result_random_insertion.append([len(split_data), test_insert(split_data, test_rbtree)])
+            result_random_search.append([len(split_data), test_search(split_data, test_rbtree)])
+            result_random_deletion.append([len(split_data), test_deletion(split_data, test_rbtree)])
         print()
 
-    with open("measurements/RedBlackTree-insertion-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/RedBlackTree-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_insertion:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/RedBlackTree-search-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/RedBlackTree-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_search:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/RedBlackTree-deletion-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/RedBlackTree-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_deletion:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
 
     print("Terminou tudo")
