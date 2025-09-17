@@ -1,14 +1,12 @@
 from time import time
-
 from src.edas.skiplist import SkipList
-
 import os
 
 setup_a = {
-        "name": "setup-a",
-        "start": int(os.getenv("START_A")),
-        "end": int(os.getenv("END_A")),
-        "step": int(os.getenv("STEP_A"))
+    "name": "setup-a",
+    "start": int(os.getenv("START_A")),
+    "end": int(os.getenv("END_A")),
+    "step": int(os.getenv("STEP_A"))
 }
 
 setup_b = {
@@ -27,43 +25,53 @@ setup_c = {
 
 setups = [setup_a, setup_b, setup_c]
 
+
 def test_insert(data: list, test_skiplist: SkipList) -> float:
-    test_skiplist = SkipList()
+    times = []
+    for _ in range(25):
+        test_skiplist = SkipList()
 
-    start = time() * 1000
-    
-    print("Teste de adicao rolando")
+        start = time() * 1000
+        print("Teste de adicao rolando")
+        for value in data:
+            test_skiplist.insert(int(value), int(value))
+        end = time() * 1000
+        print(start, end)
 
-    for value in data:
-        test_skiplist.insert(int(value), int(value))
+        times.append(end - start)
 
-    end = time() * 1000
-    
-    return end - start
+    return sum(times) / len(times)
 
 
 def test_deletion(data: list, test_skiplist: SkipList) -> float:
-    start = time() * 1000
+    times = []
+    for _ in range(25):
+        start = time() * 1000
+        print("Teste de delecao rolando")
+        for value in data:
+            test_skiplist.delete(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    print("Teste de delecao rolando")
-    for value in data:
-        test_skiplist.delete(int(value))
+        times.append(end - start)
 
-    end = time() * 1000
-
-    return end - start
+    return sum(times) / len(times)
 
 
 def test_search(data: list, test_skiplist: SkipList) -> float:
-    start = time() * 1000
+    times = []
+    for _ in range(25):
+        start = time() * 1000
+        print("Teste de procura rolando")
+        for value in data:
+            test_skiplist.search(int(value))
+        end = time() * 1000
+        print(start, end)
 
-    print("Teste de procura rolando")
-    for value in data:
-        test_skiplist.search(int(value))
+        times.append(end - start)
 
-    end = time() * 1000
+    return sum(times) / len(times)
 
-    return end - start
 
 # Calculando adição
 for setup in setups:
