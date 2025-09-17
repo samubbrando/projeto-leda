@@ -40,8 +40,6 @@ def test_insert(data: list, test_linkedlist: LinkedList) -> float:
 
     end = time() * 1000
     
-    print(start, end)
-
     return end - start
 
 
@@ -54,8 +52,6 @@ def test_deletion(data: list, test_linkedlist: LinkedList) -> float:
 
     end = time() * 1000
 
-    print(start, end)
-
     return end - start
 
 
@@ -67,8 +63,6 @@ def test_search(data: list, test_linkedlist: LinkedList) -> float:
         test_linkedlist.getByValue(int(value))
 
     end = time() * 1000
-
-    print(start, end)
 
     return end - start
 
@@ -93,23 +87,24 @@ for setup in setups:
             i += 1
 
             test_linkedlist = LinkedList()
+            split_data = data.split()
 
-            result_sequential_insertion.append([len(data), test_insert(data.split(), test_linkedlist)])
-            result_sequential_search.append([len(data), test_search(data.split(), test_linkedlist)])
-            result_sequential_deletion.append([len(data), test_deletion(data.split(), test_linkedlist)])
+            result_sequential_insertion.append([len(split_data), test_insert(split_data, test_linkedlist)])
+            result_sequential_search.append([len(split_data), test_search(split_data, test_linkedlist)])
+            result_sequential_deletion.append([len(split_data), test_deletion(split_data, test_linkedlist)])
         print()
 
-    with open("measurements/linkedlist-insertion-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_insertion:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/linkedlist-search-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/linkedlist-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_search:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/linkedlist-deletion-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/linkedlist-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_deletion:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
     # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
@@ -119,23 +114,24 @@ for setup in setups:
             i += 1
 
             test_linkedlist = LinkedList()
+            split_data = data.split()
 
-            result_random_insertion.append([len(data), test_insert(data.split(), test_linkedlist)])
-            result_random_search.append([len(data), test_search(data.split(), test_linkedlist)])
-            result_random_deletion.append([len(data), test_deletion(data.split(), test_linkedlist)])
+            result_random_insertion.append([len(split_data), test_insert(split_data, test_linkedlist)])
+            result_random_search.append([len(split_data), test_search(split_data, test_linkedlist)])
+            result_random_deletion.append([len(split_data), test_deletion(split_data, test_linkedlist)])
         print()
 
-    with open("measurements/linkedlist-insertion-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/linkedlist-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_insertion:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/linkedlist-search-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/linkedlist-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_search:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/linkedlist-deletion-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/linkedlist-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_deletion:
-            f.write(str(i))
+            f.write(f"{i[0]} {i[1]}")
             f.write("\n")
 
     print("Terminou tudo")
