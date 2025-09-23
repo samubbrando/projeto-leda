@@ -1,5 +1,6 @@
 from time import time
 from src.edas.skiplist import SkipList
+import threading
 import os
 
 setup_a = {
@@ -25,68 +26,119 @@ setup_c = {
 
 setups = [setup_a, setup_b, setup_c]
 
+measurements_dir = os.path.join(os.path.dirname(__file__), "../../measurements")
+os.makedirs(measurements_dir, exist_ok=True)
 
-def test_insert(data: list, test_skiplist: SkipList) -> float:
+setup_a = {
+        "name": "setup-a",
+        "start": int(os.getenv("START_A")),
+        "end": int(os.getenv("END_A")),
+        "step": int(os.getenv("STEP_A"))
+}
+
+setup_b = {
+    "name": "setup-b",
+    "start": int(os.getenv("START_B")),
+    "end": int(os.getenv("END_B")),
+    "step": int(os.getenv("STEP_B"))
+}
+
+setup_c = {
+    "name": "setup-c",
+    "start": int(os.getenv("START_C")),
+    "end": int(os.getenv("END_C")),
+    "step": int(os.getenv("STEP_C"))
+}
+
+setups = [setup_a, setup_b, setup_c]
+
+results = []
+
+def test_insert(data: list, test_skiplist: SkipList, filename: str) -> float:
     times = []
     for _ in range(25):
-        test_skiplist = SkipList()
+        test_skiplist_copy = test_skiplist
 
         start = time() * 1000
+
         print("Teste de adicao rolando")
         for value in data:
-            test_skiplist.insert(int(value), int(value))
+            test_skiplist_copy.insert(int(value))
+            
         end = time() * 1000
         print(start, end)
 
         times.append(end - start)
 
-    return sum(times) / len(times)
+    # Para manter na original
+    for value in data:
+        test_skiplist_copy.insert(int(value))
+
+    with open(filename, "a", encoding="utf-8") as f: 
+        f.write(f"{len(data)} {sum(times) / len(times):.2f}")
 
 
-def test_deletion(data: list, test_skiplist: SkipList) -> float:
+def test_deletion(data: list, test_rbtree: SkipList, filename: str) -> float:
     times = []
     for _ in range(25):
+        test_rb_tree_copy = test_rbtree
+
         start = time() * 1000
+
         print("Teste de delecao rolando")
         for value in data:
-            test_skiplist.delete(int(value))
+            test_rb_tree_copy.delete(int(value))
+
         end = time() * 1000
         print(start, end)
 
         times.append(end - start)
 
-    return sum(times) / len(times)
+    with open(filename, "a", encoding="utf-8") as f: 
+        f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
 
 
-def test_search(data: list, test_skiplist: SkipList) -> float:
+def test_search(data: list, test_rbtree: SkipList, filename: str) -> float:
     times = []
     for _ in range(25):
+        test_rb_tree_copy = test_rbtree
+
         start = time() * 1000
+
         print("Teste de procura rolando")
         for value in data:
-            test_skiplist.search(int(value))
+            test_rb_tree_copy.search(int(value))
+
         end = time() * 1000
         print(start, end)
 
         times.append(end - start)
 
-    return sum(times) / len(times)
+    with open(filename, "a", encoding="utf-8") as f: 
+        f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
 
+# Criando arquivos onde os resultados serão armazenados
+for setup in setups:
+    with open(f"measurements/RedBlackTree-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/RedBlackTree-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/RedBlackTree-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/RedBlackTree-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/RedBlackTree-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/RedBlackTree-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+
+working_threads = []
 
 # Calculando adição
 for setup in setups:
-    result_sequential_insertion = []
-    result_random_insertion = []
-
-    result_sequential_search = []
-    result_random_search = []
-
-    result_sequential_deletion = []
-    result_random_deletion = []
-
     # SEQUENTIAL
     with open(f"src/samples/sequential-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
-        i = 0
+        i = 1
         for data in f.readlines():
             print("Iniciando os testes", i)
             i += 1
@@ -94,51 +146,44 @@ for setup in setups:
             test_skiplist = SkipList()
             split_data = data.split()
 
-            result_sequential_insertion.append([len(split_data), test_insert(split_data, test_skiplist)])
-            result_sequential_search.append([len(split_data), test_search(split_data, test_skiplist)])
-            result_sequential_deletion.append([len(split_data), test_deletion(split_data, test_skiplist)])
+            thread_to_add = threading.Thread(target=test_insert, args=(split_data, test_skiplist, f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+
+            thread_to_add = threading.Thread(target=test_search, args=(split_data, test_skiplist, f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+            
+            thread_to_add = threading.Thread(target=test_deletion, args=(split_data, test_skiplist, f"measurements/linkedlist-{setup['name']}-deletion-sequential.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
         print()
-
-
-    with open(f"measurements/skiplist-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_insertion:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
-    with open(f"measurements/skiplist-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_search:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
-    with open(f"measurements/skiplist-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_deletion:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
 
     # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
-        i = 0
+        i = 1
         for data in f.readlines():
-            print("Iniciando os testes", i)
+            print(f"Iniciando os testes setup: {setup["name"]} linked-list", i)
             i += 1
 
             test_skiplist = SkipList()
             split_data = data.split()
 
-            result_random_insertion.append([len(split_data), test_insert(split_data, test_skiplist)])
-            result_random_search.append([len(split_data), test_search(split_data, test_skiplist)])
-            result_random_deletion.append([len(split_data), test_deletion(split_data, test_skiplist)])
+            thread_to_add = threading.Thread(target=test_insert, args=(split_data, test_skiplist, f"measurements/linkedlist-{setup['name']}-insertion-random.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+
+            thread_to_add = threading.Thread(target=test_search, args=(split_data, test_skiplist, f"measurements/linkedlist-{setup['name']}-insertion-random.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+            
+            thread_to_add = threading.Thread(target=test_deletion, args=(split_data, test_skiplist, f"measurements/linkedlist-{setup['name']}-deletion-random.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+            
         print()
 
-    with open(f"measurements/skiplist-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
-        for i in result_random_insertion:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
-    with open(f"measurements/skiplist-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
-        for i in result_random_search:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
-    with open(f"measurements/skiplist-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
-        for i in result_random_deletion:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
+    print("Terminado a designação das threads de trabalho")
 
-
+for thread in working_threads:
+    thread.join()

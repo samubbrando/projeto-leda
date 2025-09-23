@@ -50,6 +50,10 @@ def test_insert(data: list, test_linkedlist: LinkedList, filename: str) -> float
 
         times.append(end - start)
 
+    # Para manter na original
+    for value in data:
+        test_linkedlist.addLast(int(value))
+
     with open(filename, "a", encoding="utf-8") as f:
         f.write(f"{len(data)} {sum(times) / len(times):.2f}")
 

@@ -64,12 +64,16 @@ def test_insert(data: list, test_rbtree: RedBlackTree, filename: str) -> float:
 
         print("Teste de adicao rolando")
         for value in data:
-            test_rb_tree_copy.search(int(value))
+            test_rb_tree_copy.insert(int(value))
             
         end = time() * 1000
         print(start, end)
 
         times.append(end - start)
+
+    # Para manter na estrutura de dados original
+    for value in data:
+        test_rb_tree_copy.insert(int(value))
 
     with open(filename, "a", encoding="utf-8") as f: 
         f.write(f"{len(data)} {sum(times) / len(times):.2f}")
