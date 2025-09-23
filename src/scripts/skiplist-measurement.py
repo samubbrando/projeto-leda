@@ -1,5 +1,7 @@
 from time import time
 from src.edas.skiplist import SkipList
+import copy
+
 import threading
 import os
 
@@ -56,31 +58,37 @@ results = []
 
 def test_insert(data: list, test_skiplist: SkipList, filename: str) -> float:
     times = []
-
     insertion_threads = []
-    def isolated_task(test_skiplist: SkipList, times: list[int]):
+
+    def isolated_task(data: list, times: list):
+        test_skiplist_empty = SkipList()
         start = time() * 1000
 
         print("Teste de adicao rolando")
         for value in data:
-            test_skiplist_copy.insert(int(value))
+            test_skiplist_empty.insert(int(value), int(value))
             
         end = time() * 1000
         print(start, end)
+        print(times)
 
         times.append(end - start)
 
+    print(times)
+
     for _ in range(25):
-        ins_thread = threading.Thread(target=isolated_task, args=(test_skiplist, times))
+        ins_thread = threading.Thread(target=isolated_task, args=(data, times))
         ins_thread.start()
         insertion_threads.append(ins_thread)
 
     for ins_thread in insertion_threads:
         ins_thread.join()
 
+    print(times)
+
     # Para manter na original
     for value in data:
-        test_skiplist_copy.insert(int(value))
+        test_skiplist.insert(int(value), int(value))
 
     with open(filename, "a", encoding="utf-8") as f: 
         f.write(f"{len(data)} {sum(times) / len(times):.2f}")
@@ -90,8 +98,8 @@ def test_deletion(data: list, test_skiplist: SkipList, filename: str) -> float:
     times = []
     deletion_threads = []
     
-    def isolated_task(test_skiplist: SkipList, times: list[int]):
-        test_skiplist_copy = test_skiplist
+    def isolated_task(test_skiplist: SkipList, data: list, times: list):
+        test_skiplist_copy = copy.copy(test_skiplist)
 
         start = time() * 1000
 
@@ -105,7 +113,7 @@ def test_deletion(data: list, test_skiplist: SkipList, filename: str) -> float:
         times.append(end - start)
 
     for _ in range(25):
-        del_thread = threading.Thread(target=isolated_task, args=(test_skiplist, times))
+        del_thread = threading.Thread(target=isolated_task, args=(test_skiplist, data, times))
         del_thread.start()
         deletion_threads.append(del_thread)
 
@@ -120,8 +128,8 @@ def test_search(data: list, test_skiplist: SkipList, filename: str) -> float:
     times = []
     search_threads = []
 
-    def isolated_task(test_skiplist: SkipList, times: list[int]):
-        test_skiplist_copy = test_skiplist
+    def isolated_task(test_skiplist: SkipList, data: list, times: list):
+        test_skiplist_copy = copy.copy(test_skiplist)
 
         start = time() * 1000
 
@@ -135,10 +143,11 @@ def test_search(data: list, test_skiplist: SkipList, filename: str) -> float:
         times.append(end - start)
 
     for _ in range(25):
-        ins_thread = threading.Thread(target=isolated_task, args=(test_skiplist, times))
+        ins_thread = threading.Thread(target=isolated_task, args=(test_skiplist, data, times))
         ins_thread.start()
         search_threads.append(ins_thread)
 
+    print(sum(times))
     with open(filename, "a", encoding="utf-8") as f: 
         f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
 
