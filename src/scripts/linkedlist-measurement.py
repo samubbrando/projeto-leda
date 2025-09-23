@@ -1,5 +1,7 @@
 from time import time
 from src.edas.linkedlist import LinkedList
+
+import threading
 import os
 
 measurements_dir = os.path.join(os.path.dirname(__file__), "../../measurements")
@@ -28,7 +30,9 @@ setup_c = {
 
 setups = [setup_a, setup_b, setup_c]
 
-def test_insert(data: list, test_linkedlist: LinkedList) -> float:
+results = []
+
+def test_insert(data: list, test_linkedlist: LinkedList, filename: str) -> float:
     times = []
     for _ in range(25):
         test_linkedlist = LinkedList()
@@ -42,10 +46,11 @@ def test_insert(data: list, test_linkedlist: LinkedList) -> float:
 
         times.append(end - start)
 
-    return sum(times) / len(times)
+    with open(filename, "a", encoding="utf-8") as f: 
+        f.write(f"{len(data)} {sum(times) / len(times):.2f}")
 
 
-def test_deletion(data: list, test_linkedlist: LinkedList) -> float:
+def test_deletion(data: list, test_linkedlist: LinkedList, filename: str) -> float:
     times = []
     for _ in range(25):
         start = time() * 1000
@@ -57,10 +62,11 @@ def test_deletion(data: list, test_linkedlist: LinkedList) -> float:
 
         times.append(end - start)
 
-    return sum(times) / len(times)
+    with open(filename, "a", encoding="utf-8") as f: 
+        f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
 
 
-def test_search(data: list, test_linkedlist: LinkedList) -> float:
+def test_search(data: list, test_linkedlist: LinkedList, filename: str) -> float:
     times = []
     for _ in range(25):
         start = time() * 1000
@@ -72,20 +78,28 @@ def test_search(data: list, test_linkedlist: LinkedList) -> float:
 
         times.append(end - start)
 
-    return sum(times) / len(times)
+    with open(filename, "a", encoding="utf-8") as f: 
+        f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
 
+# Criando arquivos onde os resultados serão armazenados
+for setup in setups:
+    with open(f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/linkedlist-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/linkedlist-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/linkedlist-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/linkedlist-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+    with open(f"measurements/linkedlist-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
+        f.write('\n')
+
+working_threads = []
 
 # Calculando adição
 for setup in setups:
-    result_sequential_insertion = []
-    result_random_insertion = []
-
-    result_sequential_search = []
-    result_random_search = []
-
-    result_sequential_deletion = []
-    result_random_deletion = []
-
     # SEQUENTIAL
     with open(f"src/samples/sequential-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
         i = 1
@@ -96,50 +110,44 @@ for setup in setups:
             test_linkedlist = LinkedList()
             split_data = data.split()
 
-            result_sequential_insertion.append([len(split_data), test_insert(split_data, test_linkedlist)])
-            result_sequential_search.append([len(split_data), test_search(split_data, test_linkedlist)])
-            result_sequential_deletion.append([len(split_data), test_deletion(split_data, test_linkedlist)])
-        print()
+            thread_to_add = threading.Thread(target=test_insert, args=(split_data, test_linkedlist, f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
 
-    with open(f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_insertion:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
-    with open(f"measurements/linkedlist-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_search:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
-    with open(f"measurements/linkedlist-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
-        for i in result_sequential_deletion:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
+            thread_to_add = threading.Thread(target=test_search, args=(split_data, test_linkedlist, f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+            
+            thread_to_add = threading.Thread(target=test_deletion, args=(split_data, test_linkedlist, f"measurements/linkedlist-{setup['name']}-deletion-sequential.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+        print()
 
     # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
         i = 1
         for data in f.readlines():
-            print("Iniciando os testes", i)
+            print(f"Iniciando os testes setup: {setup["name"]} linked-list", i)
             i += 1
 
             test_linkedlist = LinkedList()
             split_data = data.split()
 
-            result_random_insertion.append([len(split_data), test_insert(split_data, test_linkedlist)])
-            result_random_search.append([len(split_data), test_search(split_data, test_linkedlist)])
-            result_random_deletion.append([len(split_data), test_deletion(split_data, test_linkedlist)])
+            thread_to_add = threading.Thread(target=test_insert, args=(split_data, test_linkedlist, f"measurements/linkedlist-{setup['name']}-insertion-random.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+
+            thread_to_add = threading.Thread(target=test_search, args=(split_data, test_linkedlist, f"measurements/linkedlist-{setup['name']}-insertion-random.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+            
+            thread_to_add = threading.Thread(target=test_deletion, args=(split_data, test_linkedlist, f"measurements/linkedlist-{setup['name']}-deletion-random.txt"))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+            
         print()
 
-    with open(f"measurements/linkedlist-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
-        for i in result_random_insertion:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
-    with open(f"measurements/linkedlist-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
-        for i in result_random_search:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
-    with open(f"measurements/linkedlist-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
-        for i in result_random_deletion:
-            f.write(f"{i[0]} {i[1]}")
-            f.write("\n")
+    print("Terminado a designação das threads de trabalho")
 
-    print("Terminou tudo")
+for thread in working_threads:
+    thread.join()
