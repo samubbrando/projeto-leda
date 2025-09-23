@@ -133,6 +133,21 @@ for setup in setups:
     with open(f"measurements/RedBlackTree-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
         f.write('\n')
 
+
+def test(data: list, setup_name: str, type_files: str):
+
+    test_rb_tree = RedBlackTree()
+
+    test_insert(
+        data, test_rb_tree, f"measurements/RedBlackTree-{setup_name}-insertion-{type_files}.txt")
+
+    test_search(
+        data, test_rb_tree, f"measurements/RedBlackTree-{setup_name}-search-{type_files}.txt")
+    
+    test_deletion(
+        data, test_rb_tree, f"measurements/RedBlackTree-{setup_name}-deletion-{type_files}.txt")
+
+
 working_threads = []
 
 # Calculando adição
@@ -141,47 +156,26 @@ for setup in setups:
     with open(f"src/samples/sequential-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
         i = 1
         for data in f.readlines():
-            print("Iniciando os testes", i)
+            print(f"Iniciando os testes sequential setup: {setup["name"]} RedBlackTree", i)
+            thread_to_add = threading.Thread(target=test, args=(data.split(), setup['name'], 'sequential'))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+
             i += 1
 
-            test_rb_tree = RedBlackTree()
-            split_data = data.split()
-
-            thread_to_add = threading.Thread(target=test_insert, args=(split_data, test_rb_tree, f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt"))
-            thread_to_add.start()
-            working_threads.append(thread_to_add)
-
-            thread_to_add = threading.Thread(target=test_search, args=(split_data, test_rb_tree, f"measurements/linkedlist-{setup['name']}-insertion-sequential.txt"))
-            thread_to_add.start()
-            working_threads.append(thread_to_add)
-            
-            thread_to_add = threading.Thread(target=test_deletion, args=(split_data, test_rb_tree, f"measurements/linkedlist-{setup['name']}-deletion-sequential.txt"))
-            thread_to_add.start()
-            working_threads.append(thread_to_add)
         print()
 
     # RANDOM
     with open(f"src/samples/random-{setup['name']}-{setup['start']}-{setup['end']}-{setup['step']}.txt") as f:
         i = 1
         for data in f.readlines():
-            print(f"Iniciando os testes setup: {setup["name"]} linked-list", i)
+            print(f"Iniciando os testes random setup: {setup["name"]} RedBlackTree", i)
+            thread_to_add = threading.Thread(target=test, args=(data.split(), setup['name'], 'random'))
+            thread_to_add.start()
+            working_threads.append(thread_to_add)
+
             i += 1
 
-            test_rb_tree = RedBlackTree()
-            split_data = data.split()
-
-            thread_to_add = threading.Thread(target=test_insert, args=(split_data, test_rb_tree, f"measurements/linkedlist-{setup['name']}-insertion-random.txt"))
-            thread_to_add.start()
-            working_threads.append(thread_to_add)
-
-            thread_to_add = threading.Thread(target=test_search, args=(split_data, test_rb_tree, f"measurements/linkedlist-{setup['name']}-insertion-random.txt"))
-            thread_to_add.start()
-            working_threads.append(thread_to_add)
-            
-            thread_to_add = threading.Thread(target=test_deletion, args=(split_data, test_rb_tree, f"measurements/linkedlist-{setup['name']}-deletion-random.txt"))
-            thread_to_add.start()
-            working_threads.append(thread_to_add)
-            
         print()
 
     print("Terminado a designação das threads de trabalho")
