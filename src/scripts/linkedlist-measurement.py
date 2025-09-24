@@ -63,7 +63,7 @@ def test_insert(data: list, test_linked_list: LinkedList, filename: str) -> floa
 
     # Para manter na original
     for value in data:
-        test_linked_list.insert(int(value), int(value))
+        test_linked_list.addLast(int(value))
 
 
 
@@ -77,7 +77,7 @@ def test_deletion(data: list, test_linked_list: LinkedList, filename: str) -> fl
 
         print("Teste de delecao rolando")
         for value in data:
-            test_linked_list_copy.removeLast(int(value))
+            test_linked_list_copy.removeByValue(int(value))
 
         end = time() * 1000
         print(start, end)
@@ -104,7 +104,7 @@ def test_search(data: list, test_linked_list: LinkedList, filename: str) -> floa
 
         print("Teste de procura rolando")
         for value in data:
-            test_linked_list.search(int(value))
+            test_linked_list.getByValue(int(value))
 
         end = time() * 1000
         print(start, end)

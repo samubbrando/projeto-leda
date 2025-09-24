@@ -84,7 +84,7 @@ def test_insert(data: list, test_rb_tree: RedBlackTree, filename: str) -> float:
 
     # Para manter na original
     for value in data:
-        test_rb_tree.insert(int(value), int(value))
+        test_rb_tree.insert(int(value))
 
 
 
