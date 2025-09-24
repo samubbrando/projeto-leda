@@ -68,7 +68,6 @@ def test_insert(data: list, test_skiplist: SkipList, filename: str) -> float:
             test_skiplist_empty.insert(int(value), int(value))
             
         end = time() * 1000
-        print(start, end)
 
         with open(filename, "a", encoding="utf-8") as f: 
             f.write(f"{len(data)} {end-start:.2f}")
@@ -101,7 +100,6 @@ def test_deletion(data: list, test_skiplist: SkipList, filename: str) -> float:
             test_skiplist_copy.delete(int(value))
 
         end = time() * 1000
-        print(start, end)
 
         with open(filename, "a", encoding="utf-8") as f: 
             f.write(f"{len(data)} {end-start:.2f}")
@@ -128,7 +126,6 @@ def test_search(data: list, test_skiplist: SkipList, filename: str) -> float:
             test_skiplist.search(int(value))
 
         end = time() * 1000
-        print(start, end)
 
         with open(filename, "a", encoding="utf-8") as f: 
             f.write(f"{len(data)} {end-start:.2f}")

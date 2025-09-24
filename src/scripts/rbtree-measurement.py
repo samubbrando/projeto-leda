@@ -63,7 +63,6 @@ def test_insert(data: list, test_rb_tree: RedBlackTree, filename: str) -> float:
         test_rb_tree_empty = RedBlackTree()
         start = time() * 1000
 
-        print("Teste de adicao rolando")
         for value in data:
             test_rb_tree_empty.insert(int(value))
             
@@ -96,7 +95,6 @@ def test_deletion(data: list, test_rb_tree: RedBlackTree, filename: str) -> floa
 
         start = time() * 1000
 
-        print("Teste de delecao rolando")
         for value in data:
             test_rb_tree_copy.delete(int(value))
 
@@ -123,7 +121,6 @@ def test_search(data: list, test_rb_tree: RedBlackTree, filename: str) -> float:
     def isolated_task(test_rb_tree: RedBlackTree, data: list):
         start = time() * 1000
 
-        print("Teste de procura rolando")
         for value in data:
             test_rb_tree.search(int(value))
 

@@ -47,7 +47,6 @@ def test_insert(data: list, test_linked_list: LinkedList, filename: str) -> floa
             test_linked_list_empty.addLast(int(value))
             
         end = time() * 1000
-        print(start, end)
 
         with open(filename, "a", encoding="utf-8") as f: 
             f.write(f"{len(data)} {end-start:.2f}")
@@ -80,7 +79,6 @@ def test_deletion(data: list, test_linked_list: LinkedList, filename: str) -> fl
             test_linked_list_copy.removeByValue(int(value))
 
         end = time() * 1000
-        print(start, end)
 
         with open(filename, "a", encoding="utf-8") as f: 
             f.write(f"{len(data)} {end-start:.2f}")
@@ -107,7 +105,6 @@ def test_search(data: list, test_linked_list: LinkedList, filename: str) -> floa
             test_linked_list.getByValue(int(value))
 
         end = time() * 1000
-        print(start, end)
 
         with open(filename, "a", encoding="utf-8") as f: 
             f.write(f"{len(data)} {end-start:.2f}")
