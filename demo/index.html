@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skip List Visualization</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive Skip List Visualization</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <input type="number" id="insertValue" placeholder="Value" min="1" max="999">
+                <button onclick="insert()">Insert</button>
+            </div>
+            <div class="control-group">
+                <input type="number" id="searchValue" placeholder="Value" min="1" max="999">
+                <button onclick="search()">Search</button>
+            </div>
+            <div class="control-group">
+                <input type="number" id="deleteValue" placeholder="Value" min="1" max="999">
+                <button onclick="remove()">Delete</button>
+            </div>
+            <button onclick="generateRandom()">Add Random</button>
+            <button onclick="clear()">Clear All</button>
+            <button onclick="toggleInfo()">Toggle Info</button>
+        </div>
+
+        <div class="skiplist-container" id="skiplistContainer">
+            <!-- Skip list will be rendered here -->
+        </div>
+
+        <div class="info-panel" id="infoPanel">
+            <h3>Skip List Statistics</h3>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="nodeCount">0</div>
+                    <div>Total Nodes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="maxLevel">0</div>
+                    <div>Max Level</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="lastOperation">-</div>
+                    <div>Last Operation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="searchSteps">-</div>
+                    <div>Search Steps</div>
+                </div>
+            </div>
+            
+            <div class="explanation">
+                <h4>How Skip Lists Work:</h4>
+                <p><strong>Skip lists</strong> are probabilistic data structures that maintain sorted data with multiple levels of linked lists. Each level acts as an "express lane" that allows skipping over elements, achieving O(log n) average time complexity for search, insert, and delete operations.</p>
+                
+                <p><strong>Key Properties:</strong></p>
+                <ul>
+                    <li>Level 0 contains all elements in sorted order</li>
+                    <li>Higher levels contain fewer elements (probability-based)</li>
+                    <li>Each node has a random height determined at insertion</li>
+                    <li>Search starts from the highest level and moves down</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="operations-log" id="operationsLog"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
