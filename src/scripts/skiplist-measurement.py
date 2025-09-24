@@ -121,13 +121,11 @@ def test_search(data: list, test_skiplist: SkipList, filename: str) -> float:
     search_threads = []
 
     def isolated_task(test_skiplist: SkipList, data: list):
-        test_skiplist_copy = copy.copy(test_skiplist)
-
         start = time() * 1000
 
         print("Teste de procura rolando")
         for value in data:
-            test_skiplist_copy.search(int(value))
+            test_skiplist.search(int(value))
 
         end = time() * 1000
         print(start, end)

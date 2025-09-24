@@ -1,5 +1,6 @@
 from time import time
 from src.edas.linkedlist import LinkedList
+import copy
 
 import threading
 import os
@@ -34,69 +35,91 @@ setups = [setup_a, setup_b, setup_c]
 results = []
 
 
-def test_insert(data: list, test_linkedlist: LinkedList, filename: str) -> float:
-    times = []
-    for _ in range(25):
-        test_linkedlist = LinkedList()
+def test_insert(data: list, test_linked_list: LinkedList, filename: str) -> float:
+    insertion_threads = []
 
+    def isolated_task(data: list):
+        test_linked_list_empty = LinkedList()
         start = time() * 1000
 
         print("Teste de adicao rolando")
         for value in data:
-            test_linkedlist.addLast(int(value))
-
+            test_linked_list_empty.addLast(int(value))
+            
         end = time() * 1000
         print(start, end)
 
-        times.append(end - start)
+        with open(filename, "a", encoding="utf-8") as f: 
+            f.write(f"{len(data)} {end-start:.2f}")
+            f.write('\n')
+
+    for _ in range(25):
+        ins_thread = threading.Thread(target=isolated_task, args=(data,))
+        ins_thread.start()
+        insertion_threads.append(ins_thread)
+
+    for ins_thread in insertion_threads:
+        ins_thread.join()
 
     # Para manter na original
     for value in data:
-        test_linkedlist.addLast(int(value))
-
-    with open(filename, "a", encoding="utf-8") as f:
-        f.write(f"{len(data)} {sum(times) / len(times):.2f}")
+        test_linked_list.insert(int(value), int(value))
 
 
-def test_deletion(data: list, test_linkedlist: LinkedList, filename: str) -> float:
-    times = []
 
-    for _ in range(25):
-        test_linkedlist_copy = test_linkedlist
+def test_deletion(data: list, test_linked_list: LinkedList, filename: str) -> float:
+    deletion_threads = []
+
+    def isolated_task(test_linked_list: LinkedList, data: list):
+        test_linked_list_copy = copy.copy(test_linked_list)
 
         start = time() * 1000
 
         print("Teste de delecao rolando")
         for value in data:
-            test_linkedlist_copy.removeByValue(int(value))
+            test_linked_list_copy.removeLast(int(value))
 
         end = time() * 1000
         print(start, end)
 
-        times.append(end - start)
+        with open(filename, "a", encoding="utf-8") as f: 
+            f.write(f"{len(data)} {end-start:.2f}")
+            f.write('\n')
 
-    with open(filename, "a", encoding="utf-8") as f:
-        f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
-
-
-def test_search(data: list, test_linkedlist: LinkedList, filename: str) -> float:
-    times = []
     for _ in range(25):
-        test_linkedlist_copy = test_linkedlist
+        del_thread = threading.Thread(target=isolated_task, args=(test_linked_list, data))
+        del_thread.start()
+        deletion_threads.append(del_thread)
 
+    for del_thread in deletion_threads:
+        del_thread.join()
+
+
+
+def test_search(data: list, test_linked_list: LinkedList, filename: str) -> float:
+    search_threads = []
+
+    def isolated_task(test_linked_list: LinkedList, data: list):
         start = time() * 1000
 
         print("Teste de procura rolando")
         for value in data:
-            test_linkedlist_copy.getByValue(int(value))
+            test_linked_list.search(int(value))
 
         end = time() * 1000
         print(start, end)
 
-        times.append(end - start)
+        with open(filename, "a", encoding="utf-8") as f: 
+            f.write(f"{len(data)} {end-start:.2f}")
+            f.write('\n')
 
-    with open(filename, "a", encoding="utf-8") as f:
-        f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
+    for _ in range(25):
+        src_thread = threading.Thread(target=isolated_task, args=(test_linked_list, data))
+        src_thread.start()
+        search_threads.append(src_thread)
+
+    for src_thread in search_threads:
+        src_thread.join()
 
 
 # Criando arquivos onde os resultados serão armazenados

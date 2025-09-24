@@ -2,6 +2,7 @@ from time import time
 from src.edas.rbtree import RedBlackTree
 
 import threading
+import copy
 import os
 
 setup_a = {
@@ -55,34 +56,43 @@ setups = [setup_a, setup_b, setup_c]
 
 results = []
 
-def test_insert(data: list, test_rbtree: RedBlackTree, filename: str) -> float:
-    times = []
-    for _ in range(25):
-        test_rb_tree_copy = test_rbtree
+def test_insert(data: list, test_rb_tree: RedBlackTree, filename: str) -> float:
+    insertion_threads = []
 
+    def isolated_task(data: list):
+        test_rb_tree_empty = RedBlackTree()
         start = time() * 1000
 
         print("Teste de adicao rolando")
         for value in data:
-            test_rb_tree_copy.insert(int(value))
+            test_rb_tree_empty.insert(int(value))
             
         end = time() * 1000
         print(start, end)
 
-        times.append(end - start)
+        with open(filename, "a", encoding="utf-8") as f: 
+            f.write(f"{len(data)} {end-start:.2f}")
+            f.write('\n')
 
-    # Para manter na estrutura de dados original
-    for value in data:
-        test_rb_tree_copy.insert(int(value))
-
-    with open(filename, "a", encoding="utf-8") as f: 
-        f.write(f"{len(data)} {sum(times) / len(times):.2f}")
-
-
-def test_deletion(data: list, test_rbtree: RedBlackTree, filename: str) -> float:
-    times = []
     for _ in range(25):
-        test_rb_tree_copy = test_rbtree
+        ins_thread = threading.Thread(target=isolated_task, args=(data,))
+        ins_thread.start()
+        insertion_threads.append(ins_thread)
+
+    for ins_thread in insertion_threads:
+        ins_thread.join()
+
+    # Para manter na original
+    for value in data:
+        test_rb_tree.insert(int(value), int(value))
+
+
+
+def test_deletion(data: list, test_rb_tree: RedBlackTree, filename: str) -> float:
+    deletion_threads = []
+
+    def isolated_task(test_rb_tree: RedBlackTree, data: list):
+        test_rb_tree_copy = copy.copy(test_rb_tree)
 
         start = time() * 1000
 
@@ -93,30 +103,46 @@ def test_deletion(data: list, test_rbtree: RedBlackTree, filename: str) -> float
         end = time() * 1000
         print(start, end)
 
-        times.append(end - start)
+        with open(filename, "a", encoding="utf-8") as f: 
+            f.write(f"{len(data)} {end-start:.2f}")
+            f.write('\n')
 
-    with open(filename, "a", encoding="utf-8") as f: 
-        f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
-
-
-def test_search(data: list, test_rbtree: RedBlackTree, filename: str) -> float:
-    times = []
     for _ in range(25):
-        test_rb_tree_copy = test_rbtree
+        del_thread = threading.Thread(target=isolated_task, args=(test_rb_tree, data))
+        del_thread.start()
+        deletion_threads.append(del_thread)
 
+    for del_thread in deletion_threads:
+        del_thread.join()
+
+
+
+def test_search(data: list, test_rb_tree: RedBlackTree, filename: str) -> float:
+    search_threads = []
+
+    def isolated_task(test_rb_tree: RedBlackTree, data: list):
         start = time() * 1000
 
         print("Teste de procura rolando")
         for value in data:
-            test_rb_tree_copy.search(int(value))
+            test_rb_tree.search(int(value))
 
         end = time() * 1000
         print(start, end)
 
-        times.append(end - start)
+        with open(filename, "a", encoding="utf-8") as f: 
+            f.write(f"{len(data)} {end-start:.2f}")
+            f.write('\n')
 
-    with open(filename, "a", encoding="utf-8") as f: 
-        f.write(f"{len(data)} {sum(times) / len(times):.2f}\n")
+    for _ in range(25):
+        src_thread = threading.Thread(target=isolated_task, args=(test_rb_tree, data))
+        src_thread.start()
+        search_threads.append(src_thread)
+
+    for src_thread in search_threads:
+        src_thread.join()
+
+
 
 # Criando arquivos onde os resultados serão armazenados
 for setup in setups:

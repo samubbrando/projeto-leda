@@ -144,7 +144,6 @@ class AVLTree:
     def max(self):
         return self._max(self.root) if self.root else None
 
-
     def search(self, value):
         return self._search(self.root, value)
 
@@ -220,6 +219,43 @@ class AVLTree:
                 queue.append(node.right)
         return result
 
+    # ------------------ Copy ------------------
+    def copy(self):
+        """
+        Cria uma cópia profunda da árvore AVL.
+        Retorna uma nova instância de AVLTree com os mesmos valores.
+        """
+        new_tree = AVLTree()
+        if self.root:
+            new_tree.root = self._copy_node(self.root)
+            new_tree.size = self.size
+        return new_tree
+
+    def _copy_node(self, node):
+        """
+        Método auxiliar recursivo para copiar os nós da árvore.
+        Cria um novo nó com o mesmo valor e copia recursivamente
+        os filhos esquerdo e direito.
+        """
+        if not node:
+            return None
+        
+        # Cria um novo nó com o mesmo valor
+        new_node = Node(node.value)
+        new_node.height = node.height
+        
+        # Copia recursivamente os filhos
+        new_node.left = self._copy_node(node.left)
+        new_node.right = self._copy_node(node.right)
+        
+        # Ajusta os ponteiros parent
+        if new_node.left:
+            new_node.left.parent = new_node
+        if new_node.right:
+            new_node.right.parent = new_node
+            
+        return new_node
+
     # ------------------ Util ------------------
     def height(self):
         return self.root.height if self.root else -1
@@ -229,3 +265,97 @@ class AVLTree:
 
     def size_tree(self):
         return self.size
+
+    def to_list(self):
+        """Converte a árvore em uma lista ordenada (in-order)"""
+        result = []
+        self._to_list(self.root, result)
+        return result
+
+    def _to_list(self, node, result):
+        if node:
+            self._to_list(node.left, result)
+            result.append(node.value)
+            self._to_list(node.right, result)
+
+
+if __name__ == "__main__":
+    print("=== Testes da AVL Tree com método copy ===\n")
+    
+    # Teste 1: Criação e inserção de elementos
+    print("1. Testando inserção de elementos:")
+    tree1 = AVLTree()
+    valores = [50, 25, 75, 10, 30, 60, 80, 5, 15, 27, 35]
+    
+    for valor in valores:
+        tree1.add(valor)
+    
+    print(f"Árvore original - Tamanho: {tree1.size_tree()}")
+    print(f"Altura: {tree1.height()}")
+    print(f"BFS: {tree1.bfs()}")
+    print(f"In-order: {tree1.to_list()}")
+    print()
+    
+    # Teste 2: Testando o método copy
+    print("2. Testando método copy:")
+    tree2 = tree1.copy()
+    
+    print(f"Árvore copiada - Tamanho: {tree2.size_tree()}")
+    print(f"Altura: {tree2.height()}")
+    print(f"BFS: {tree2.bfs()}")
+    print(f"In-order: {tree2.to_list()}")
+    print()
+    
+    # Teste 3: Verificando independência das árvores
+    print("3. Testando independência das árvores:")
+    print("Adicionando 100 na árvore original...")
+    tree1.add(100)
+    print("Removendo 25 da árvore copiada...")
+    tree2.remove(25)
+    
+    print(f"Árvore original - Tamanho: {tree1.size_tree()}, BFS: {tree1.bfs()}")
+    print(f"Árvore copiada - Tamanho: {tree2.size_tree()}, BFS: {tree2.bfs()}")
+    print()
+    
+    # Teste 4: Testando cópia de árvore vazia
+    print("4. Testando cópia de árvore vazia:")
+    tree_vazia = AVLTree()
+    copia_vazia = tree_vazia.copy()
+    
+    print(f"Árvore vazia original - Tamanho: {tree_vazia.size_tree()}, Vazia: {tree_vazia.is_empty()}")
+    print(f"Cópia da árvore vazia - Tamanho: {copia_vazia.size_tree()}, Vazia: {copia_vazia.is_empty()}")
+    print()
+    
+    # Teste 5: Testando busca nas árvores copiadas
+    print("5. Testando busca nas árvores:")
+    valores_busca = [50, 25, 100, 999]
+    
+    for valor in valores_busca:
+        resultado_orig = tree1.search(valor)
+        resultado_copia = tree2.search(valor)
+        
+        print(f"Busca por {valor}:")
+        print(f"  Original: {'Encontrado' if resultado_orig else 'Não encontrado'}")
+        print(f"  Cópia: {'Encontrado' if resultado_copia else 'Não encontrado'}")
+    
+    print()
+    
+    # Teste 6: Testando min/max
+    print("6. Testando min/max:")
+    print(f"Árvore original - Min: {tree1.min().value if tree1.min() else None}, Max: {tree1.max().value if tree1.max() else None}")
+    print(f"Árvore copiada - Min: {tree2.min().value if tree2.min() else None}, Max: {tree2.max().value if tree2.max() else None}")
+    print()
+    
+    # Teste 7: Testando múltiplas cópias
+    print("7. Testando múltiplas cópias:")
+    tree3 = tree2.copy()
+    tree4 = tree3.copy()
+    
+    tree3.add(200)
+    tree4.add(300)
+    
+    print(f"Árvore 2 (original da cópia): {tree2.bfs()}")
+    print(f"Árvore 3 (cópia + 200): {tree3.bfs()}")
+    print(f"Árvore 4 (cópia da cópia + 300): {tree4.bfs()}")
+    
+    print("\n=== Todos os testes concluídos! ===")

@@ -94,6 +94,41 @@ class RedBlackTree():
         else:
             raise Exception("Unknown style.")
 
+    # Copy method
+    def copy(self: T) -> 'RedBlackTree':
+        """
+        Create a deep copy of the Red-Black Tree.
+        Returns a new RedBlackTree with the same structure, colors, keys, and values.
+        """
+        new_tree = RedBlackTree()
+        if self.root.is_null():
+            return new_tree
+        
+        new_tree.root = self._copy_subtree(self.root, new_tree.TNULL)
+        new_tree.size = self.size
+        new_tree._iter_format = self._iter_format
+        
+        return new_tree
+    
+    def _copy_subtree(self: T, node: Node, parent: Node) -> Node:
+        """
+        Helper method to recursively copy a subtree.
+        """
+        if node.is_null():
+            return self.TNULL
+        
+        # Create new node with same key and value
+        new_node = Node(node.get_key())
+        new_node.value = node.value
+        new_node.set_color(node.get_color())
+        new_node.parent = parent
+        
+        # Recursively copy left and right subtrees
+        new_node.left = self._copy_subtree(node.left, new_node)
+        new_node.right = self._copy_subtree(node.right, new_node)
+        
+        return new_node
+
     # Iterators #
     def preorder(self: T) -> list:
         return self.pre_order_helper(self.root)
@@ -423,3 +458,144 @@ class RedBlackTree():
 
     def print_tree(self: T) -> None:
         self.__print_helper(self.root, "", True)
+
+
+if __name__ == "__main__":
+    print("=== Testes da Red-Black Tree com método copy ===\n")
+    
+    # Teste 1: Cópia de árvore vazia
+    print("1. Teste: Cópia de árvore vazia")
+    empty_tree = RedBlackTree()
+    empty_copy = empty_tree.copy()
+    print(f"Árvore original vazia: {empty_tree.size == 0}")
+    print(f"Cópia vazia: {empty_copy.size == 0}")
+    print(f"São objetos diferentes: {empty_tree is not empty_copy}")
+    print()
+    
+    # Teste 2: Cópia de árvore com um elemento
+    print("2. Teste: Cópia de árvore com um elemento")
+    single_tree = RedBlackTree()
+    single_tree.insert(10)
+    single_tree[10] = 100  # Definir valor
+    
+    single_copy = single_tree.copy()
+    
+    print(f"Árvore original - tamanho: {single_tree.size}, raiz: {single_tree.root.get_key()}")
+    print(f"Cópia - tamanho: {single_copy.size}, raiz: {single_copy.root.get_key()}")
+    print(f"Valor original: {single_tree[10]}")
+    print(f"Valor cópia: {single_copy[10]}")
+    print(f"Cor da raiz original: {single_tree.root.get_color()}")
+    print(f"Cor da raiz cópia: {single_copy.root.get_color()}")
+    print()
+    
+    # Teste 3: Cópia de árvore complexa
+    print("3. Teste: Cópia de árvore complexa")
+    complex_tree = RedBlackTree()
+    keys = [20, 10, 30, 5, 15, 25, 35, 1, 8, 12, 18]
+    
+    for key in keys:
+        complex_tree.insert(key)
+        complex_tree[key] = key * 10  # Valor = chave * 10
+    
+    print(f"Árvore original inserida com chaves: {keys}")
+    print(f"Tamanho da árvore original: {complex_tree.size}")
+    
+    complex_copy = complex_tree.copy()
+    print(f"Tamanho da cópia: {complex_copy.size}")
+    print()
+    
+    # Teste 4: Verificar independência das cópias
+    print("4. Teste: Verificar independência das cópias")
+    # Modificar a árvore original
+    complex_tree.insert(40)
+    complex_tree[10] = 999  # Alterar valor existente
+    
+    print(f"Após inserir 40 na original:")
+    print(f"Tamanho original: {complex_tree.size}")
+    print(f"Tamanho cópia: {complex_copy.size}")
+    print(f"Valor de key=10 na original: {complex_tree[10]}")
+    print(f"Valor de key=10 na cópia: {complex_copy[10]}")
+    
+    # Tentar buscar 40 nas duas árvores
+    original_search = complex_tree.search(40)
+    copy_search = complex_copy.search(40)
+    
+    print(f"Busca por 40 na original encontrada: {not original_search.is_null()}")
+    print(f"Busca por 40 na cópia encontrada: {not copy_search.is_null()}")
+    print()
+    
+    # Teste 5: Verificar estrutura e cores
+    print("5. Teste: Verificar estrutura e cores")
+    
+    def compare_trees(tree1, tree2, node1, node2):
+        """Compara recursivamente se duas árvores têm a mesma estrutura e cores"""
+        if node1.is_null() and node2.is_null():
+            return True
+        
+        if node1.is_null() or node2.is_null():
+            return False
+            
+        if (node1.get_key() != node2.get_key() or 
+            node1.get_color() != node2.get_color()):
+            return False
+            
+        return (compare_trees(tree1, tree2, node1.left, node2.left) and
+                compare_trees(tree1, tree2, node1.right, node2.right))
+    
+    # Criar uma nova árvore para comparação limpa
+    test_tree = RedBlackTree()
+    for key in [20, 10, 30, 5, 15, 25, 35]:
+        test_tree.insert(key)
+    
+    test_copy = test_tree.copy()
+    
+    structure_match = compare_trees(test_tree, test_copy, test_tree.root, test_copy.root)
+    print(f"Estruturas e cores idênticas: {structure_match}")
+    print()
+    
+    # Teste 6: Testar diferentes estilos de iteração
+    print("6. Teste: Estilos de iteração preservados")
+    iter_tree = RedBlackTree()
+    for key in [20, 10, 30]:
+        iter_tree.insert(key)
+    
+    # Testar diferentes estilos
+    styles = ["pre", "in", "post"]
+    for style in styles:
+        iter_tree.set_iteration_style(style)
+        iter_copy = iter_tree.copy()
+        
+        original_keys = [node.get_key() for node in iter_tree]
+        copy_keys = [node.get_key() for node in iter_copy]
+        
+        print(f"Estilo {style} - Original: {original_keys}")
+        print(f"Estilo {style} - Cópia: {copy_keys}")
+        print(f"Iterações idênticas: {original_keys == copy_keys}")
+    
+    print()
+    
+    # Teste 7: Teste de performance com árvore maior
+    print("7. Teste: Performance com árvore maior")
+    import time
+    
+    big_tree = RedBlackTree()
+    keys = list(range(1, 101))  # 100 elementos
+    
+    for key in keys:
+        big_tree.insert(key)
+        big_tree[key] = key * key
+    
+    start_time = time.time()
+    big_copy = big_tree.copy()
+    end_time = time.time()
+    
+    print(f"Cópia de árvore com {big_tree.size} elementos")
+    print(f"Tempo de cópia: {end_time - start_time:.6f} segundos")
+    print(f"Tamanhos iguais: {big_tree.size == big_copy.size}")
+    
+    # Verificar alguns valores aleatórios
+    test_keys = [1, 25, 50, 75, 100]
+    values_match = all(big_tree[key] == big_copy[key] for key in test_keys)
+    print(f"Valores correspondentes: {values_match}")
+    
+    print("\n=== Todos os testes concluídos ===")
