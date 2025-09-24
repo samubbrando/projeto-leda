@@ -30,15 +30,17 @@ setups = [setup_a, setup_b, setup_c]
 
 def test_insert(data: list, test_avltree: AVLTree) -> float:
     times = []
+
+    print("Teste de adicao rolando")
+
     for _ in range(25):
         test_avltree = AVLTree()
 
         start = time() * 1000
-        print("Teste de adicao rolando")
+        
         for value in data:
             test_avltree.add(int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 
@@ -47,13 +49,15 @@ def test_insert(data: list, test_avltree: AVLTree) -> float:
 
 def test_deletion(data: list, test_avltree: AVLTree) -> float:
     times = []
+
+    print("Teste de delecao rolando")
+
     for _ in range(25):
         start = time() * 1000
-        print("Teste de delecao rolando")
+        
         for value in data:
             test_avltree.remove(int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 
@@ -62,13 +66,15 @@ def test_deletion(data: list, test_avltree: AVLTree) -> float:
 
 def test_search(data: list, test_avltree: AVLTree) -> float:
     times = []
+
+    print("Teste de procura rolando")
+    
     for _ in range(25):
         start = time() * 1000
-        print("Teste de procura rolando")
+        
         for value in data:
             test_avltree.search(int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 
@@ -102,15 +108,15 @@ for setup in setups:
             result_sequential_deletion.append([len(split_data), test_deletion(split_data, test_avltree)])
         print()
         
-    with open("measurements/AVLTree-insertion-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/AVLTree-{setup['name']}-insertion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_insertion:
             f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/AVLTree-search-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/AVLTree-{setup['name']}-search-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_search:
             f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/AVLTree-deletion-sequential.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/AVLTree-{setup['name']}-deletion-sequential.txt", "w", encoding="utf-8") as f:
         for i in result_sequential_deletion:
             f.write(f"{i[0]} {i[1]}")
             f.write("\n")
@@ -131,15 +137,15 @@ for setup in setups:
             
         print()
 
-    with open("measurements/AVLTree-insertion-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/AVLTree-{setup['name']}-insertion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_insertion:
             f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/AVLTree-search-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/AVLTree-{setup['name']}-search-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_search:
             f.write(f"{i[0]} {i[1]}")
             f.write("\n")
-    with open("measurements/AVLTree-deletion-random.txt", "w", encoding="utf-8") as f:
+    with open(f"measurements/AVLTree-{setup['name']}-deletion-random.txt", "w", encoding="utf-8") as f:
         for i in result_random_deletion:
             f.write(f"{i[0]} {i[1]}")
             f.write("\n")

@@ -30,15 +30,16 @@ setups = [setup_a, setup_b, setup_c]
 
 def test_insert(data: list, test_linkedlist: LinkedList) -> float:
     times = []
+
+    print("Teste de adicao rolando")
+
     for _ in range(25):
         test_linkedlist = LinkedList()
-
         start = time() * 1000
-        print("Teste de adicao rolando")
+
         for value in data:
             test_linkedlist.addLast(int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 
@@ -47,13 +48,15 @@ def test_insert(data: list, test_linkedlist: LinkedList) -> float:
 
 def test_deletion(data: list, test_linkedlist: LinkedList) -> float:
     times = []
+
+    print("Teste de delecao rolando")
+
     for _ in range(25):
         start = time() * 1000
-        print("Teste de delecao rolando")
+        
         for value in data:
             test_linkedlist.removeByValue(int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 
@@ -62,13 +65,15 @@ def test_deletion(data: list, test_linkedlist: LinkedList) -> float:
 
 def test_search(data: list, test_linkedlist: LinkedList) -> float:
     times = []
+
+    print("Teste de procura rolando")
+    
     for _ in range(25):
         start = time() * 1000
-        print("Teste de procura rolando")
+        
         for value in data:
             test_linkedlist.getByValue(int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 

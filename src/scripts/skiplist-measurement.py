@@ -28,15 +28,17 @@ setups = [setup_a, setup_b, setup_c]
 
 def test_insert(data: list, test_skiplist: SkipList) -> float:
     times = []
+
+    print("Teste de adicao rolando")
+    
     for _ in range(25):
         test_skiplist = SkipList()
 
         start = time() * 1000
-        print("Teste de adicao rolando")
+        
         for value in data:
             test_skiplist.insert(int(value), int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 
@@ -45,13 +47,15 @@ def test_insert(data: list, test_skiplist: SkipList) -> float:
 
 def test_deletion(data: list, test_skiplist: SkipList) -> float:
     times = []
+
+    print("Teste de delecao rolando")
+
     for _ in range(25):
         start = time() * 1000
-        print("Teste de delecao rolando")
+        
         for value in data:
             test_skiplist.delete(int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 
@@ -60,13 +64,14 @@ def test_deletion(data: list, test_skiplist: SkipList) -> float:
 
 def test_search(data: list, test_skiplist: SkipList) -> float:
     times = []
+
+    print("Teste de procura rolando")
+
     for _ in range(25):
         start = time() * 1000
-        print("Teste de procura rolando")
         for value in data:
             test_skiplist.search(int(value))
         end = time() * 1000
-        print(start, end)
 
         times.append(end - start)
 

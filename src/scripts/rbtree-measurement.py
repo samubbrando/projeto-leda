@@ -28,16 +28,17 @@ setups = [setup_a, setup_b, setup_c]
 
 def test_insert(data: list, test_rbtree: RedBlackTree) -> float:
     times = []
+
+    print("Teste de adicao rolando")
+
     for _ in range(25):  # 25 execuções
         test_rbtree = RedBlackTree()
         start = time() * 1000
 
-        print("Teste de adicao rolando")
         for value in data:
             test_rbtree.insert(int(value))
 
         end = time() * 1000
-        print(start, end)
         times.append(end - start)
 
     return sum(times) / len(times)  # média
@@ -45,15 +46,16 @@ def test_insert(data: list, test_rbtree: RedBlackTree) -> float:
 
 def test_deletion(data: list, test_rbtree: RedBlackTree) -> float:
     times = []
+    
+    print("Teste de delecao rolando")
+    
     for _ in range(25):  # 25 execuções
         start = time() * 1000
 
-        print("Teste de delecao rolando")
         for value in data:
             test_rbtree.delete(int(value))
 
         end = time() * 1000
-        print(start, end)
         times.append(end - start)
 
     return sum(times) / len(times)
@@ -61,15 +63,16 @@ def test_deletion(data: list, test_rbtree: RedBlackTree) -> float:
 
 def test_search(data: list, test_rbtree: RedBlackTree) -> float:
     times = []
+
+    print("Teste de procura rolando")
+
     for _ in range(25):  # 25 execuções
         start = time() * 1000
 
-        print("Teste de procura rolando")
         for value in data:
             test_rbtree.search(int(value))
 
         end = time() * 1000
-        print(start, end)
         times.append(end - start)
 
     return sum(times) / len(times)
