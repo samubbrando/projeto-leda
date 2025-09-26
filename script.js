@@ -136,7 +136,8 @@
                 for (let i = 0; i <= this.maxLevel; i++) {
                     this.header.forward[i] = this.nil;
                 }
-            }
+                this.header.forward.length = this.maxLevel + 1;
+        }
         }
 
         let skipList = new SkipList();
@@ -271,7 +272,7 @@
             render();
         }
 
-        function clear() {
+        function clearAll() {
             skipList.clear();
             document.getElementById('lastOperation').textContent = 'Clear All';
             document.getElementById('searchSteps').textContent = '-';
